@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EtsyStore Health & SEO Pro Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Adsterra Social Bar Script -->
+    <script data-cfasync="false" src="https://brijmohan.org/14/4f026a9b6f6ff7b8f93857fa964d7f81"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background: #07090e; color: #f3f4f6; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 50px 20px; }
+        .hero { text-align: center; max-width: 650px; margin-bottom: 35px; }
+        .badge { background: rgba(56, 189, 248, 0.1); color: #38bdf8; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid rgba(56, 189, 248, 0.2); display: inline-block; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        h1 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 12px; background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: #94a3b8; font-size: 15px; line-height: 1.5; }
+        
+        .audit-card { background: #111827; border: 1px solid #1f2937; width: 100%; max-width: 600px; border-radius: 16px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-direction: column; }
+        @media(min-width: 480px) { .input-group { flex-direction: row; } }
+        input[type="text"] { flex: 1; padding: 15px; border-radius: 10px; border: 1px solid #374151; background: #030712; color: #fff; font-size: 14px; outline: none; transition: border 0.3s; }
+        input[type="text"]:focus { border-color: #f97316; }
+        button { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: #fff; border: none; padding: 15px 25px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4); }
+        
+        .results-container { margin-top: 25px; border-top: 1px solid #1f2937; padding-top: 20px; }
+        .score-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: #030712; padding: 18px; border-radius: 10px; border: 1px solid #1f2937; }
+        .score-num { font-size: 32px; font-weight: 800; }
+        .score-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .audit-section { margin-bottom: 18px; text-align: left; }
+        .audit-section h3 { font-size: 15px; color: #e5e7eb; margin-bottom: 10px; }
+        .issue-item { background: rgba(239, 68, 68, 0.08); border-left: 4px solid #ef4444; padding: 10px 14px; border-radius: 6px; margin-bottom: 8px; font-size: 13px; color: #fca5a5; }
+        .pass-item { background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10b981; padding: 10px 14px; border-radius: 6px; margin-bottom: 8px; font-size: 13px; color: #6ee7b7; }
+        
+        .locker-box { background: #030712; border: 2px dashed #f97316; padding: 20px; border-radius: 12px; text-align: center; margin-top: 20px; }
+        .unlock-btn { display: inline-block; background: #f97316; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 700; margin-top: 10px; font-size: 14px; transition: 0.3s; }
+        .unlock-btn:hover { background: #ea580c; }
+        
+        .error-msg { background: #7f1d1d; color: #fca5a5; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <span class="badge">Advanced Etsy Optimizer</span>
+        <h1>Etsy Store Health & SEO Audit</h1>
+        <p>Analyze any Etsy shop instantly to discover ranking flaws, SEO drops, and conversion killers.</p>
+    </div>
+
+    <div class="audit-card">
+        {% if error %}
+            <div class="error-msg">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <div class="input-group">
+                <input type="text" name="shop_url" placeholder="Enter Etsy Shop Name or URL (e.g. CraftStudio)" value="{{ shop_name or '' }}" required>
+                <button type="submit">Run Audit</button>
+            </div>
+        </form>
+
+        {% if audit %}
+            <div class="results-container">
+                <div class="score-header">
+                    <div>
+                        <h2 style="font-size:18px; color:#fff;">{{ audit.shop_name }}</h2>
+                        <span style="font-size:12px; color:#9ca3af;">Status: {{ audit.status_text }}</span>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="score-num" style="color: {{ audit.score_color }};">{{ audit.score }}/100</div>
+                        <div class="score-label">Health Score</div>
+                    </div>
+                </div>
+
+                <div class="audit-section">
+                    <h3>⚠️ Critical Errors Found</h3>
+                    {% for issue in audit.issues %}
+                        <div class="issue-item">❌ {{ issue }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="audit-section">
+                    <h3>✅ Passed Verifications</h3>
+                    {% for pass in audit.passes %}
+                        <div class="pass-item">✔ {{ pass }}</div>
+                    {% endfor %}
+                </div>
+
+                <!-- Adsterra Monetization Locker -->
+                <div class="locker-box">
+                    <h3 style="color:#fff; font-size:16px;">🔒 Unlock Full Keyword & Traffic Report</h3>
+                    <p style="font-size:12px; color:#9ca3af; margin-top:4px;">Complete a quick verification to download the complete PDF blueprint.</p>
+                    <a href="https://auctionr.org" target="_blank" class="unlock-btn">
+                        Download Action Plan 🔓
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Adsterra Popunder Script -->
+    <script data-cfasync="false" src="https://ahuramazda.org/1/c1560c5355ed78584a0bf9c99e4493a6"></script>
+</body>
+  </html>
